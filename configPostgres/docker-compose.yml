@@ -1,0 +1,35 @@
+services:
+  postgres:
+    image: postgres:15
+    container_name: postgres
+    environment:
+      POSTGRES_DB: uptc_db
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: "1234"
+    ports:
+      - "5432:5432"
+    networks:
+      - dbnet
+
+  pgbouncer:
+    image: edoburu/pgbouncer:latest
+    container_name: pgbouncer
+    environment:
+      DATABASE_URL: postgres://postgres:1234@postgres:5432/uptc_db
+      POOL_MODE: transaction
+      MAX_CLIENT_CONN: 100
+      DEFAULT_POOL_SIZE: 50
+      AUTH_TYPE: md5
+    volumes:
+      - ./pgbouncer.ini:/etc/pgbouncer/pgbouncer.ini
+      - ./userlist.txt:/etc/pgbouncer/userlist.txt
+    ports:
+      - "6432:6432"
+    depends_on:
+      - postgres
+    networks:
+      - dbnet
+
+networks:
+  dbnet:
+    driver: bridge

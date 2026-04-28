@@ -1,0 +1,35 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: uptc-api
+spec:
+  replicas: 4
+  selector:
+    matchLabels:
+      app: uptc-api
+  template:
+    metadata:
+      labels:
+        app: uptc-api
+    spec:
+      containers:
+      - name: uptc-api
+        image: andressparrar/uptc-api:1.2
+        ports:
+        - containerPort: 8080
+        env:
+        - name: DB_URL
+          valueFrom:
+            secretKeyRef:
+              name: uptc-secrets
+              key: DB_URL
+        - name: DB_USER_NAME
+          valueFrom:
+            secretKeyRef:
+              name: uptc-secrets
+              key: DB_USER
+        - name: DB_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: uptc-secrets
+              key: DB_PASSWORD
