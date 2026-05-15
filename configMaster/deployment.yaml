@@ -3,7 +3,7 @@ kind: Deployment
 metadata:
   name: uptc-api
 spec:
-  replicas: 4
+  replicas: 1
   selector:
     matchLabels:
       app: uptc-api
@@ -14,22 +14,20 @@ spec:
     spec:
       containers:
       - name: uptc-api
-        image: andressparrar/uptc-api:1.2
+        image: andressparrar/uptc-api:1.5
         ports:
         - containerPort: 8080
         env:
         - name: DB_URL
-          valueFrom:
-            secretKeyRef:
-              name: uptc-secrets
-              key: DB_URL
+          value: jdbc:postgresql://postgres-service:6432/uptc_db
         - name: DB_USER_NAME
-          valueFrom:
-            secretKeyRef:
-              name: uptc-secrets
-              key: DB_USER
+          value: postgres
         - name: DB_PASSWORD
-          valueFrom:
-            secretKeyRef:
-              name: uptc-secrets
-              key: DB_PASSWORD
+          value: "1234"
+        resources:
+            requests:
+              cpu: "200m"
+              memory: "512Mi"
+            limits:
+              cpu: "500m"
+              memory: "512Mi"

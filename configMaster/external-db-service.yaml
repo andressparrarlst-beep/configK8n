@@ -13,6 +13,6 @@ metadata:
   name: postgres-service
 subsets:
   - addresses:
-    - ip: 192.168.20.169
+    - ip: 192.168.137.241
     ports:
     - port: 6432
